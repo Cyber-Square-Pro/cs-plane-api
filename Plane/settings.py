@@ -25,11 +25,12 @@ SECRET_KEY = 'django-insecure-yt+&3l0nrs8ntog!t4uhv_((e$4i_j6@@*bpe@27x*kp=)b-jx
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+   ''
 ]
 
 # Application definition
@@ -85,14 +86,23 @@ WSGI_APPLICATION = 'Plane.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+#dev
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "plane_test",
+        "USER": "postgres",
+        "PASSWORD": "cspro123!",
+        "HOST": "43.205.195.234",
     }
 }
-
-# need to implement the jwt access and refresh token concept 
 
 REST_FRAMEWORK = {
     
