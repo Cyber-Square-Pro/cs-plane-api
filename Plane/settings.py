@@ -85,14 +85,23 @@ WSGI_APPLICATION = 'Plane.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+#dev
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "plane_test",
+        "USER": "postgres",
+        "PASSWORD": "cspro123!",
+        "HOST": "43.205.195.234",
     }
 }
-
-# need to implement the jwt access and refresh token concept 
 
 REST_FRAMEWORK = {
     
