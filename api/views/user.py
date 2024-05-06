@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from django.utils.decorators import method_decorator
 from Plane.decorator import authorized
-
+from django.http import HttpResponse
 
 
 
@@ -110,3 +110,8 @@ class EmailVerifyEndPoint(APIView):
                 'message': 'Something Went Wrong',
                 'statusCode': 406,
             })
+
+
+class CSTest(APIView):
+    def get(self, request):
+        return HttpResponse('Api Working')

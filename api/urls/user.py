@@ -1,7 +1,8 @@
 from django.urls import path
-from api.views import UserEndPoint, EmailEndPoint, EmailVerifyEndPoint
+from api.views import UserEndPoint, EmailEndPoint, EmailVerifyEndPoint, CSTest
 
 urlpatterns = [
+    path('', CSTest.as_view()),
     path('users/me/', UserEndPoint.as_view({
         'get': 'retrieve',
         'patch': 'partial_update'
