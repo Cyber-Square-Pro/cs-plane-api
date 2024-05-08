@@ -1,29 +1,54 @@
-name: Deploy to EC2
+name: Deploy to EC2 🚀
 
 on:
   push:
     branches:
-      - development  # change this to match your main branch name
+      - "development" # This triggers the workflow on push to any branch
 
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout current branch ✅
+        uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install python3-pip
-        sudo apt-get install awscli  # install AWS CLI
+      - name: Set up SSH key and whitelist EC2 IP address 🐻‍❄️
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Deploy code to EC2
-      run: |
-        scp -r * ububtu@43.205.195.234:/home/ubuntu/PLANE/PLANE-DEV/cs-plane-api
-        ssh ububtu@43.205.195.234 'cd /home/ubuntu/PLANE/PLANE-DEV/ && \
-                                          sudo pip3 install -r requirements.txt && \
-                                          sudo python3 manage.py migrate && \
-                                          sudo systemctl restart gunicorn.service'  
+      - name: Create .env file dynamically 🧨
+        env:
+          ENV: ${{ secrets.ENV }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          echo "ENV=${ENV}" >> env
+          echo "EC2_USERNAME=${EC2_USERNAME}" >> env
+          
+
+      - name: Copy files to remote server 🚙
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+          scp -r * $EC2_USERNAME@$EC2_HOST:/home/ubuntu/PLANE/PLANE-DEV/cs-plane-api
+
+
+
+
+      - name: Run Bash Script To Delpoy App 🚀
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+        run: |
+            sudo pip3 install -r requirements.txt && \
+            sudo python3 manage.py migrate && \
+            sudo systemctl restart gunicorn.service' 
+#           ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "chmod +x ./deploy.sh && ./deploy.sh"
+
+      - name: Clean up SSH key 🚀
+        if: always()
+        run: rm -f ~/.ssh/id_rsa
