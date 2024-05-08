@@ -27,19 +27,33 @@ jobs:
         run: |
           echo "ENV=${ENV}" >> env
           echo "EC2_USERNAME=${EC2_USERNAME}" >> env
-          
 
-      - name: Copy files to remote server 🚙
+      - name: Set up Python 🐍
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+          architecture: x64
+
+      - name: Install dependencies and deploy 🚙
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
         run: |
-          scp -r * $EC2_USERNAME@$EC2_HOST:/home/ubuntu/PLANE/PLANE-DEV/cs-plane-api
-          ssh ubuntu@43.205.195.234 'cd /home/ubuntu/PLANE/PLANE-DEV/cs-plane-api && \
-                            sudo pip3 install -r requirements.txt && \
-                            sudo python3 manage.py migrate && \
-                            sudo systemctl restart gunicorn.service'
+          # Create and activate virtual environment
+          python -m venv venv
+          source venv/bin/activate
+          
+          # Install Python dependencies
+          pip install -r requirements.txt
 
+          # Copy files to remote server
+          scp -r * $EC2_USERNAME@$EC2_HOST:/home/ubuntu/PLANE/PLANE-DEV/cs-plane-api
+          
+          # SSH into the server and perform deployment tasks
+          ssh ubuntu@$EC2_HOST 'cd /home/ubuntu/PLANE/PLANE-DEV/cs-plane-api && \
+                                sudo pip3 install -r requirements.txt && \
+                                sudo python3 manage.py migrate && \
+                                sudo systemctl restart gunicorn.service'
 
       - name: Clean up SSH key 🚀
         if: always()
