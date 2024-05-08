@@ -114,4 +114,4 @@ class EmailVerifyEndPoint(APIView):
 
 class CSTest(APIView):
     def get(self, request):
-        return HttpResponse('Hello from plane APP...')
+        return HttpResponse('Hello from plane APP.........')
