@@ -44,9 +44,11 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
         run: |
-            sudo pip3 install -r requirements.txt && \
-            sudo python3 manage.py migrate && \
-            sudo systemctl restart gunicorn.service' 
+          scp -r * ububtu@43.205.195.234:/home/ubuntu/PLANE/PLANE-DEV/cs-plane-api
+          ssh ububtu@43.205.195.234 'cd /home/ubuntu/PLANE/PLANE-DEV/ && \
+                                          sudo pip3 install -r requirements.txt && \
+                                          sudo python3 manage.py migrate && \
+                                          sudo systemctl restart gunicorn.service'  
 #           ssh -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "chmod +x ./deploy.sh && ./deploy.sh"
 
       - name: Clean up SSH key 🚀
