@@ -18,8 +18,19 @@ from Plane.decorator import authorized
 
  
 class WorkspaceEndpoint(viewsets.ViewSet, BaseAPIView):
+
     permission_classes = [IsAuthenticated]
+
     def fetch_workspace(self, request):
+
+        """
+        Author: Mohammed Rifad on 29th April 2024
+        Purpose: Retrieves user workspaces.
+        Input parameters: None
+        Return: Returns {'id', 'created_by', 'updated_by', 'created_at',
+                      'updated_at', 'owner'}
+
+        """
         member_count = (
             WorkspaceMember.objects.filter(
                 workspace=OuterRef("id"), member__is_bot=False
@@ -44,11 +55,19 @@ class WorkspaceEndpoint(viewsets.ViewSet, BaseAPIView):
         
 
         serializer = WorkSpaceSerializer(self.filter_queryset(workspace), many=True)
-        print(serializer.data)
-        return Response({
-            'data':serializer.data, })
+      
+        return Response({'data':serializer.data })
     
     def create(self, request):
+
+        """
+        Author: Mohammed Rifad on 28th April 2024
+        Purpose: Retrieves user workspaces.
+        Input parameters: workspace_name, slug, organization_size
+        Return: Returns message, statusCode
+
+        """
+
         try:
             
             slug = request.data['slug']
@@ -85,13 +104,11 @@ class WorkspaceEndpoint(viewsets.ViewSet, BaseAPIView):
                 
                 user = User.objects.get(id = request.user.id)
                 user.is_onboarded = True
-                print('id is', workspace.id)
-                print('actual',serializer.data["id"] )
+
                 user.last_workspace_id = serializer.data["id"]
                 user.onboarding_step['workspace_create'] = True
                 user.save()
 
-                # token_response = self.handle_token_response(request)
                 return Response({
                     'data':serializer.data,
                     'message': 'Workspace Created Succesfully',
@@ -111,6 +128,13 @@ class WorkspaceEndpoint(viewsets.ViewSet, BaseAPIView):
 class WorkSpaceAvailabilityCheckEndpoint(APIView):
     permission_classes = [IsAuthenticated] 
 
+    """
+        Author: Mohammed Rifad on 27th April 2024
+        Purpose: Checks workspace availability.
+        Input parameters: workspace_slug
+        Return: Returns message, statusCode
+
+    """
     def get(self, request):
         slug = request.GET.get("slug", False)
 
