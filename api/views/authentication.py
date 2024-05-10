@@ -16,10 +16,17 @@ def get_tokens_for_user(user):
         str(refresh),
     )
 
-
 class SignUpEndpoint(APIView):
 
     def post(self, request):
+
+        """
+        Author: Mohammed Rifad on 10th March 2024
+        Purpose: Registers a user.
+        Input parameters: email, password 
+        Return: Returns accessToken, refreshToken, message, statusCode
+
+        """
 
         email = request.data.get("email", False)
         password = request.data.get("password", False)
@@ -55,16 +62,22 @@ class SignUpEndpoint(APIView):
             },
         )
 
-
 class SignInEndPoint(APIView):
 
     def post(self, request):
+         
+        """
+        Author: Mohammed Rifad on 10th March 2024
+        Purpose: logs in a user.
+        Input parameters: email, password 
+        Return: Returns accessToken, refreshToken, message, statusCode
+        
+        """
         email = request.data['email']
         password = request.data['password']
         user = User.objects.filter(email=email).first()
 
         if user is None:
-            print('no user')
             return Response(
                 {
                     'message': 'Sorry, user not found. Please try again.',
@@ -99,7 +112,4 @@ class SignInEndPoint(APIView):
              
         }
         response = Response(data)
-        # response.set_cookie('cookie1', access_token,  )
-        # response.set_cookie('cookie2', refresh_token, )
-
         return response

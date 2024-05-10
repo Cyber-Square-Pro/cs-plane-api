@@ -22,34 +22,71 @@ class UserEndPoint(viewsets.ViewSet):
         return self.request.user_id
     
     def retrieve(self, request):
+
+        """
+        Author: Mohammed Rifad on 21st April 2024
+        Purpose: Retrieves user details.
+        Input parameters: None
+        Return: Returns {'id', 'avatar', 'cover_image', 'date_joined',
+                'display_name', 'email', 'first_name', 'last_name','is_active',
+                'is_bot', 'is_email_verified', 'is_managed', 'is_onboarded', 
+                'is_tour_completed','mobile_number','role', 'onboarding_step',
+                'user_timezone', 'username', 'theme', 'last_workspace_id'}
+
+        """
+
         user = User.objects.get(id=request.user.id)
         serializer = UserMeSerializer(user)
         return Response(serializer.data)
 
     def retrieve_user_settings(self, request):
+         
+        """
+        Author: Mohammed Rifad on 21st April 2024
+        Purpose: Retrieves user settings.
+        Input parameters: None
+        Return: Returns {'id', 'email', 'workspace'}
+
+        """
         user = User.objects.get(id = request.user.id)
         serialized_data = UserMeSettingsSerializer(user).data
         return Response(serialized_data, status=status.HTTP_200_OK)
     
     def partial_update(self, request):
+
+        """
+        Author: Mohammed Rifad on 23rd April 2024
+        Purpose: Updates user data 
+        Input parameters: User field that needs to be updated like workspace, profile etc
+        Return: Returns {'id', 'email', 'workspace'}
+
+        """
         user = User.objects.get(id=request.user.id)
-        print(request.data,'8888')
         serializer = UserMeSerializer(
             instance=user, data=request.data,  partial=True)
         if serializer.is_valid():
             try:
                 serializer.save()
             except Exception as e:
-                print(e)
+                None
 
         return Response(serializer.data)
 
  
 class EmailEndPoint(APIView):
     permission_classes = [IsAuthenticated]
+    
     def post(self, request):
+         
+        """
+        Author: Mohammed Rifad on 25th April 2024
+        Purpose: Sends Verification code to user's email.
+        Input parameters: None
+        Return: Returns {'message', 'statusCode}
+
+        """
+
         try:
-            print('iii')
             user = User.objects.get(id=request.user.id)
             verification_code = generate_verification_code()
             user_record = VerificationCode.objects.filter(
@@ -79,12 +116,21 @@ class EmailEndPoint(APIView):
 
  
 class EmailVerifyEndPoint(APIView):
+    
     permission_classes = [IsAuthenticated]
-    def post(self, request):
-        try:
-            print(request.data)
-            code = request.data['code']
 
+    def post(self, request):
+
+        """
+        Author: Mohammed Rifad on 27th April 2024
+        Purpose: Verifies user email by checking OTP.
+        Input parameters: OTP
+        Return: Returns {'message', 'statusCode'}
+
+        """
+
+        try:
+            code = request.data['code']
             user_record = VerificationCode.objects.get(user=request.user.id)
 
             if user_record.code == code:
@@ -105,7 +151,7 @@ class EmailVerifyEndPoint(APIView):
             })
 
         except Exception as e:
-            print(e)
+
             return Response({
                 'message': 'Something Went Wrong',
                 'statusCode': 406,
@@ -114,4 +160,4 @@ class EmailVerifyEndPoint(APIView):
 
 class CSTest(APIView):
     def get(self, request):
-        return HttpResponse('Hello from Plane..')
+        return HttpResponse('Hello from Plane App')

@@ -1,9 +1,10 @@
 name: Django Deployment
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
-      - development  # Adjust the branch as per your setup
+      - development 
 
 jobs:
   deploy:
