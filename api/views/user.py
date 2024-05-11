@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from api.serializers.user import UserMeSerializer, UserMeSettingsSerializer, UserSerializer
 from db.models import User, VerificationCode
-from api.services import generate_verification_code
+from api.utils import generate_verification_code, send_otp
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -10,6 +10,7 @@ from rest_framework import viewsets
 from django.utils.decorators import method_decorator
 from Plane.decorator import authorized
 from django.http import HttpResponse
+
 
 
 
@@ -99,8 +100,17 @@ class EmailEndPoint(APIView):
                 user_record.code = verification_code
                 user_record.created_at = timezone.now()
                 user_record.save()
+                
+                # Added by Fidha Naushad on 11th May 2024 - previously code was being displayed on the browser's console 
+                send_otp(
+                    email_subject = 'Email Verification',
+                    email_template = 'email_verification.html',
+                    recipient_email = user.email,
+                    context = {'verification_code' : verification_code }
+                )
+                  
             return Response({
-                'message': 'Verification code sent',
+                'message': 'Verification code has been sent to your email',
                 'statusCode': 200,
                 'code': verification_code,
 
