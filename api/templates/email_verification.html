@@ -1,0 +1,62 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+    <style>
+        /* Example styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            display: block;
+            margin: 0 auto;
+            width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .code-container {
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!--logo -->
+        <img src="https://th.bing.com/th/id/OIP.y7It5uZvqs0iL8v-OUwNrAHaHa?rs=1&pid=ImgDetMain" alt="Logo" class="logo">
+        
+        <p style="text-align: center; font-size: 18px;">The code below is only valid for 2 minutes:</p>
+        
+        <div class="code-container">
+            {{ verification_code }}
+        </div>
+        
+        <p style="text-align: center;">Please copy and paste this on the screen where you requested this from.</p>
+    </div>
+<div>
+    <p class="recipient-info">This email was sent to {{ recipient_email }}. Please delete if you aren't the intended recipient.</p>
+        
+</div>
+</div>
+</body>
+</html>
+
