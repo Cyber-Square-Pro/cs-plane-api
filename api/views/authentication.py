@@ -28,7 +28,7 @@ class SignUpEndpoint(APIView):
 
         """
 
-        email = request.data.get("email", False)
+        email = request.data.get("email", False) 
         password = request.data.get("password", False)
 
         user = User.objects.filter(email=email)
