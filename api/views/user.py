@@ -117,6 +117,7 @@ class EmailEndPoint(APIView):
             })
 
         except Exception as e:
+            print(e)
             return Response({
                 'message': 'Something Went Wrong',
                 'statusCode': 409,
@@ -170,4 +171,4 @@ class EmailVerifyEndPoint(APIView):
 
 class CSTest(APIView):
     def get(self, request):
-        return HttpResponse('Hello from Plane App')
+        return HttpResponse('Hello from Plane App..')
