@@ -62,6 +62,7 @@ class UserEndPoint(viewsets.ViewSet):
         Return: Returns {'id', 'email', 'workspace'}
 
         """
+        print(request.data)
         user = User.objects.get(id=request.user.id)
         serializer = UserMeSerializer(
             instance=user, data=request.data,  partial=True)
@@ -101,7 +102,8 @@ class EmailEndPoint(APIView):
                 user_record.created_at = timezone.now()
                 user_record.save()
                 
-                # Added by Fidha Naushad on 11th May 2024 - previously code was being displayed on the browser's console 
+                # Added by Fidha Naushad on 11th May 2024 - previously code was being 
+                # displayed on the browser's console 
                 send_otp(
                     email_subject = 'Email Verification',
                     email_template = 'email_verification.html',
