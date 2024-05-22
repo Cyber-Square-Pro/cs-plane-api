@@ -70,6 +70,7 @@ class UserEndPoint(viewsets.ViewSet):
             try:
                 serializer.save()
             except Exception as e:
+                print(e)
                 None
 
         return Response(serializer.data)
@@ -87,7 +88,7 @@ class EmailEndPoint(APIView):
         Return: Returns {'message', 'statusCode}
 
         """
-
+        
         try:
             user = User.objects.get(id=request.user.id)
             verification_code = generate_verification_code()
@@ -104,13 +105,13 @@ class EmailEndPoint(APIView):
                 
                 # Added by Fidha Naushad on 11th May 2024 - previously code was being 
                 # displayed on the browser's console 
-                send_otp(
-                    email_subject = 'Email Verification',
-                    email_template = 'email_verification.html',
-                    recipient_email = user.email,
-                    context = {'verification_code' : verification_code }
-                )
-                  
+            send_otp(
+                email_subject = 'Email Verification',
+                email_template = 'email_verification.html',
+                recipient_email = user.email,
+                context = {'verification_code' : verification_code }
+            )
+                 
             return Response({
                 'message': 'Verification code has been sent to your email',
                 'statusCode': 200,
