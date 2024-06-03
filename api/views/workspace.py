@@ -55,8 +55,7 @@ class WorkspaceEndpoint(viewsets.ViewSet, BaseAPIView):
         
 
         serializer = WorkSpaceSerializer(self.filter_queryset(workspace), many=True)
-      
-        return Response({'data':serializer.data })
+        return Response( serializer.data)
     
     def create(self, request):
 
@@ -73,6 +72,7 @@ class WorkspaceEndpoint(viewsets.ViewSet, BaseAPIView):
             slug = request.data['slug']
             workspace_name = request.data['name']
             organization_size = request.data['organization_size']
+            print(slug,'999999999')
             serializer = WorkSpaceSerializer(data=request.data)
             workspace_slug = Workspace.objects.filter(slug = slug).exists()
             if workspace_slug:
@@ -114,6 +114,7 @@ class WorkspaceEndpoint(viewsets.ViewSet, BaseAPIView):
                     'message': 'Workspace Created Succesfully',
                     })
             else:
+                print(serializer.errors)
                 return Response({
                     'data':serializer.data,
                     'message': 'Form Error',
